@@ -1,0 +1,306 @@
+alter table members add(gender varchar2(10));
+alter table members add(hobby varchar2(255));
+
+
+-- 회원 테이블 생성
+create table members(
+    id varchar2(30) primary key,
+    name varchar2(50) not null,
+    password varchar2(50),
+    hiredate date default sysdate,
+    mpoint number default 0,
+    remark varchar2(255) 
+);
+
+insert into members values('admin', '관리자', 'abc1234', sysdate, 0, null);
+insert into members values('hong', '홍길동', '1234', sysdate, 0, null);
+commit ;
+select * from members ; 
+
+
+-- 시퀀스 및 게시물 테이블 생성
+create sequence myboard start with 1 increment by 1 nocache;
+
+create table boards(
+    no number primary key,
+    writer varchar2(50),
+    subject varchar2(50) not null,    
+    content varchar2(50),    
+    regdate date default sysdate,
+    readhit number default 0,
+    remark varchar2(255),
+    groupno number default 0,
+    orderno number default 0,
+    depth number default 0 
+);
+
+alter table boards
+add constraint boards_writer_fk
+foreign key(writer) references members(id)
+on delete set null ;
+
+select * from boards ;
+
+
+-- 상품 관련 시퀀스 및 테이블 생성
+-- 상품 카테고리 테이블
+-- engname) 영문 이름, kornaame) 한글 이름
+create table categories(
+	engname varchar2(50) primary key,
+	kornaame varchar2(50)
+);
+
+
+create sequence myproduct start with 10 increment by 1 nocache;
+
+create table products(
+    num number primary key,
+    name varchar2(50),
+    company varchar2(50) not null,
+    comments varchar2(50),    
+    image varchar2(50),
+    stock number default 0,
+    price number default 0,
+    point number default 0,
+    remark varchar2(255),
+    category varchar2(255),        
+    inputdate date default sysdate
+);
+
+-- 자식 테이블이 데이터를 소유하고 있으면 삭제 불가능하게 설정
+alter table products add foreign key(category) references categories(engname) ;
+
+drop sequence myproduct;
+
+create sequence myproduct start with 1 increment by 1 nocache;
+
+delete from products;
+
+insert into products(num, name, company, comments, image01, image02, image03, stock, price, point, remark, category, inputdate)
+values(myproduct.nextval, '유아신발1', '가나신발', '예뻐요', 'child_shoes1.jpg', 'child_shoes2.jpg', 'child_shoes6.jpg', 100, 10000, 10, '', 'child', '12/08/15');
+
+insert into products(num, name, company, comments, image01, image02, image03, stock, price, point, remark, category, inputdate)
+values(myproduct.nextval, '유아신발2', '신래신발', 'Pretty', 'child_shoes3.jpg', 'child_shoes4.jpg', 'child_shoes5.jpg', 150, 10500, 30, '', 'child', '12/08/20');
+
+insert into products(num, name, company, comments, image01, image02, image03, stock, price, point, remark, category, inputdate)
+values(myproduct.nextval, '유아복', '유아나라', '예뻐요~', 'child3.jpg', 'child4.jpg', 'child5.jpg', 150, 8500, 50, '', 'child', '13/05/20');
+
+insert into products(num, name, company, comments, image01, image02, image03, stock, price, point, remark, category, inputdate)
+values(myproduct.nextval, '여성신발', '가산신발', '편안해요', 'woman_shoes1.jpg', 'woman_shoes2.jpg', 'woman_shoes3.jpg', 200, 21000, 150, '', 'woman', '12/08/31');
+
+insert into products(num, name, company, comments, image01, image02, image03, stock, price, point, remark, category, inputdate)
+values(myproduct.nextval, '여성바지', '코리팬츠', '편안해요', 'woman_pants1.jpg', 'woman_pants2.jpg', null, 200, 30000, 180, '', 'woman', '13/01/31');
+
+insert into products(num, name, company, comments, image01, image02, image03, stock, price, point, remark, category, inputdate)
+values(myproduct.nextval, '여성코트', '동작패션', '예뻐요', 'woman_coat1.gif', 'woman_coat2.gif', 'woman_coat3.gif', 250, 20000, 100, '', 'woman', '12/09/10');
+
+insert into products(num, name, company, comments, image01, image02, image03, stock, price, point, remark, category, inputdate)
+values(myproduct.nextval, '남성슈트', '킹스맨', '깔끔해요', 'man_fulldress3.jpg', 'man_fulldress2.jpg', 'man_fulldress1.jpg', 35, 50000, 500, '', 'man', '12/11/15');
+
+insert into products(num, name, company, comments, image01, image02, image03, stock, price, point, remark, category, inputdate)
+values(myproduct.nextval, '남성캐주얼', '캐주얼샵', '편안해요', 'man_casual1.jpg', 'man_casual2.jpg', null, 50, 15000, 300, '', 'man', '12/07/15');
+
+insert into products(num, name, company, comments, image01, image02, image03, stock, price, point, remark, category, inputdate)
+values(myproduct.nextval, '남성점퍼', '코린즈', '편해요', 'man_jumper.jpg', null, null, 350, 25000, 200, '', 'man', '12/09/23');
+
+commit;
+
+-- 페이징 스크립트 관련 코딩
+delete from members ;
+insert into members values('admin', '관리자', '1234', sysdate, 0, null);
+insert into members values('kim9', '김구', '1234', sysdate, 0, null);
+insert into members values('yusin', '김유신', '1234', sysdate, 0, null);
+insert into members values('lee', '이순신', '1234', sysdate, 0, null);
+
+drop sequence myboard ;
+create sequence myboard start with 1 increment by 1 nocache;
+delete from boards;
+begin 
+   for i in 1..11 loop
+      insert into boards(no, writer, subject, content, regdate, readhit, remark, groupno, orderno, depth) 
+      values(myboard.nextval, 'kim9', '김구'||to_char(i), 'jsp 잼있어요', sysdate, 0, null, myboard.currval, 0, 0);
+      
+      insert into boards(no, writer, subject, content, regdate, readhit, remark, groupno, orderno, depth) 
+      values(myboard.nextval, 'yusin', '김유신'||to_char(i), 'jsp 잼있어요', sysdate, 0, null, myboard.currval, 0, 0);      
+      
+      insert into boards(no, writer, subject, content, regdate, readhit, remark, groupno, orderno, depth) 
+      values(myboard.nextval, 'lee', '이순신'||to_char(i), 'jsp 잼있어요', sysdate, 0, null, myboard.currval, 0, 0);     
+   end loop ;
+end ;
+/
+commit ;
+
+
+select ranking, no, subject, writer, content, readhit, regdate, groupno, orderno, depth, remark
+from ( select no, subject, writer, content, readhit, regdate, groupno, orderno, depth, remark, rank() over(order by no desc) as ranking
+       from boards )
+where ranking between 1 and 10 ;
+
+-- 댓글 관련 스크립트
+-- drop table comments ;
+create table comments(
+   cnum number primary key,
+   no int,
+   writer varchar2(255),
+   content varchar2(255),   
+   regdate date default sysdate 
+);
+
+alter table comments add constraint comments_no_fk foreign key(no) references boards(no) on delete cascade ;
+
+-- drop sequence mycomment ;
+create sequence mycomment start with 1 increment by 1 nocache ; 
+
+alter table comments add constraint comments_writer_fk foreign key(writer) references members(id) on delete cascade ; 
+
+insert into comments(cnum, no, writer, content, regdate)
+values(mycomment.nextval, 1, 'yusin', 'jQuery로 Ajax를 구현하면 매우 쉽습니다', sysdate );
+
+insert into comments(cnum, no, writer, content, regdate)
+values(mycomment.nextval, 1, 'lee', '강감찬의 매크로 사용법', sysdate );
+
+insert into comments(cnum, no, writer, content, regdate)
+values(mycomment.nextval, 2, 'yusin', '김유신은 의적인가?', sysdate );
+
+insert into comments(cnum, no, writer, content, regdate) 
+values(mycomment.nextval, 2, 'lee', '홍길동은은 의적인가?', sysdate );
+
+insert into comments(cnum, no, writer, content, regdate) 
+values(mycomment.nextval, 2, 'lee', '이순신의 명량 대첩', sysdate );
+
+commit ;
+
+
+
+-- drop sequence seqoid ;
+-- drop table orders purge ;
+
+create sequence seqoid start with 1 increment by 1 nocache ;
+create table orders(
+  oid number primary key,
+  mid varchar2(10) references members(id) on delete set null,
+  orderdate date default sysdate,
+  remark varchar2(255) default ' '
+);
+
+alter table orders add(remark varchar2(255) default ' ');
+
+-- drop sequence seqodid ;
+-- drop table orderdetails purge ;
+
+create sequence seqodid start with 1 increment by 1 nocache ;
+
+-- pnum : 상품 번호, qty : 주문 수량, remark : 상품 삭제시 활용될 비고 컬럼
+create table orderdetails(
+  odid number primary key,
+  oid number references orders(oid) on delete cascade,
+  pnum number references products(num) on delete set null,
+  qty number,
+  remark varchar2(255) default ' '
+);
+
+alter table orderdetails add(remark varchar2(255) default ' ');
+--------------------------------------------------------------------------------
+select * from products where rownum <= 6;
+
+select * from boards
+order by no desc;
+
+select MYBOARD.nextval from dual;
+alter sequence MYBOARD increment by -1;
+alter sequence MYBOARD increment by 1;
+
+select no, writer, subject, content, regdate, readhit, remark, groupno, orderno, depth 
+from (select no, writer, subject, content, regdate, readhit, remark, groupno, orderno, depth, 
+rank() over(order by no desc) as ranking 
+from boards)
+where ranking between 11 and 20;
+
+select no, writer, subject, content, regdate, readhit, remark, groupno, orderno, depth, 
+rank() over(order by no desc) as ranking 
+from boards;
+
+select count(*) as cnt from boards;
+
+select count(*) as cnt from products;
+
+select *
+from (select num, name, company, comments, image01, image02, image03, stock, price, point, remark, category, inputdate, 
+rank() over(order by num desc) as ranking
+from products)
+where ranking between 1 and 6;
+
+select num, name, company, comments, image01, image02, image03, stock, price, point, remark, category, inputdate, 
+rank() over(order by num desc) as ranking
+from products;
+
+select * from products;
+
+select count(*) as cnt from boards where subject like '%순%';
+
+select m.name, b.subject, b.content, b.regdate
+from members m inner join boards b
+on m.id = b.writer
+order by m.name;
+
+select m.name, count(*) as cnt
+from members m inner join boards b
+on m.id = b.writer
+group by m.name
+order by m.name;
+
+-- 관심 상품 리스트 --
+create table ShoppingBaskets(
+    mid varchar2(30),
+    pnum number default 0,
+    qty number default 0
+);
+
+alter table ShoppingBaskets drop primary key;
+
+commit ;
+select * from ShoppingBaskets ; 
+
+select p.num pnum, p.name pname, od.qty, p.price, p.point, p.image01
+from (orders o inner join orderdetails od
+on o.oid = od.oid) inner join products p
+on od.pnum = p.num and o.oid = 3
+order by od.oid desc;
+
+--------------------------------------------------------------------------------
+-- View01 
+select m.name, b.subject, b.content, b.regdate
+from members m inner join boards b 
+on m.id = b.writer 
+order by m.name ; 
+
+-- View02
+select m.name, count(*) as cnt
+from members m inner join boards b 
+on m.id = b.writer
+group by m.name
+order by m.name ; 
+
+-- View03
+select m.name mname, p.name pname, o.orderdate, od.qty, p.price, od.qty * p.price amount   
+from ((members m inner join orders o
+on m.id = o.mid) inner join orderdetails od
+on o.oid = od.oid) inner join products p
+on od.pnum = p.num
+order by p.name desc, m.name asc;
+
+-- View04
+select m.id, sum(od.qty * p.price) as sumtotal   
+from ((members m inner join orders o
+on m.id = o.mid) inner join orderdetails od
+on o.oid = od.oid) inner join products p
+on od.pnum = p.num
+group by m.id;
+
+-- View05
+select m.name mname, p.name pname, o.orderdate, od.qty, p.price, od.qty * p.price amount   
+from ((members m inner join orders o
+on m.id = o.mid) inner join orderdetails od
+on o.oid = od.oid) inner join products p
+on od.pnum = p.num
+order by p.name desc, m.name asc;

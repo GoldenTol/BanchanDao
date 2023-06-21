@@ -1,0 +1,66 @@
+# 샵은 주석입니다.
+home=com.banchan.controller.HomeController
+#home=com.banchan.controller.product.ProductListController
+# member section
+meLogin=com.banchan.controller.member.MemberLoginController
+meLogout=com.banchan.controller.member.MemberLogoutController
+meInsert=com.banchan.controller.member.MemberInsertController
+#meUpdate=com.banchan.controller.member.MemberUpdateController
+meDetail=com.banchan.controller.member.MemberDetailController
+#meDeliver=com.banchan.controller.member.MemberDeliverController
+meDelete=com.banchan.controller.member.MemberDeleteController
+meList=com.banchan.controller.member.MemberListController
+#meIdCheck=com.banchan.controller.member.MemberIdCheckController
+# cart section
+ctList=com.banchan.controller.cart.CartListController
+ctInsert=com.banchan.controller.cart.CartInsertController
+ctDelete=com.banchan.controller.cart.CartDeleteController
+ctUpdate=com.banchan.controller.cart.CartUpdateController
+ctCalculate=com.banchan.controller.cart.CartCalculateController
+# order section
+orList=com.banchan.controller.order.OrderListController
+orDetail=com.banchan.controller.order.OrderDetailController
+# pay section
+payList=com.banchan.controller.pay.PayListController
+payInsert=com.banchan.controller.pay.PayInsertController
+# board list section
+boInsert=com.banchan.controller.board.BoardInsertController
+boUpdate=com.banchan.controller.board.BoardUpdateController
+boDelete=com.banchan.controller.board.BoardDeleteController
+boDetail=com.banchan.controller.board.BoardDetailController
+boList=com.banchan.controller.board.BoardListController
+boLiReply=com.banchan.controller.board.BoardLiReplyController
+# board qna section
+boQnInsert=com.banchan.controller.board.BoardQnInsertController
+boQnUpdate=com.banchan.controller.board.BoardQnUpdateController
+boQnDelete=com.banchan.controller.board.BoardQnDeleteController
+boQnDetail=com.banchan.controller.board.BoardQnDetailController
+boQnList=com.banchan.controller.board.BoardQnListController
+boQnReply=com.banchan.controller.board.BoardQnReplyController
+# board review section
+boReInsert=com.banchan.controller.board.BoardReInsertController
+boReUpdate=com.banchan.controller.board.BoardReUpdateController
+boReDelete=com.banchan.controller.board.BoardReDeleteController
+boReDetail=com.banchan.controller.board.BoardReDetailController
+boReList=com.banchan.controller.board.BoardReListController
+boReReply=com.banchan.controller.board.BoardReReplyController
+#product section
+#prListKk=com.banchan.controller.product.prListKkController
+#prListZz=com.banchan.controller.product.prListZzController
+#prListTt=com.banchan.controller.product.prListTtController
+#prHome=com.banchan.controller.product.prHomeController
+prInsert=com.banchan.controller.product.ProductInsertController
+prUpdate=com.banchan.controller.product.ProductUpdateController
+prDelete=com.banchan.controller.product.ProductDeleteController
+prListAll=com.banchan.controller.product.ProductListController
+prDetail=com.banchan.controller.product.ProductDetailController
+#mall section
+maInsert=com.banchan.controller.mall.MallInsertController
+maUpdate=com.banchan.controller.mall.MallUpdateController
+maDelete=com.banchan.controller.mall.MallDeleteController
+maList=com.banchan.controller.mall.MallListController
+maHistory=com.banchan.controller.mall.MallHistoryController
+maDetail=com.banchan.controller.mall.MallDetailController
+maCalculate=com.banchan.controller.mall.MallCalculateController
+#Review section
+reInsert=com.banchan.controller.review.ReviewInsertController
